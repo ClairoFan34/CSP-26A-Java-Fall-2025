@@ -9,22 +9,48 @@ public class MidtermProject {
     public static ArrayList<String> PlayerDeck = new ArrayList<>();
     public static ArrayList<String> ComputerDeck = new ArrayList<>();
     public static void main(String[] args) {
-        NewDeck(Deck);
+        PrintRules();
+        int ComputerScore;
+        int PlayerScore;
+        int DealCondtion;
         int DealAgain = 1;
-        int DealCondition = 2;
+        int PlayAgain = 1;
         do{
-            DealCondition = DealCard(DealCondition);
-            System.out.println(PlayerDeck);
-            System.out.println(ComputerDeck);
-            System.out.println(calculateScore(PlayerDeck));
-            System.out.println(calculateScore(ComputerDeck));
-            System.out.println("Deal Again? 1: Yes 2: No");
-            DealAgain = input.nextInt();
-        } while (DealAgain == 1);
+            System.out.println("\nStart!");
+            // New deck created, old decks cleared
+            NewDeck(Deck);
+            // var DealCondtion is used for func DealCard, every first go around it's set to 2 so 2 cards are dealt. After that it's set to 1 so only one card is dealt
+            // Reset to 2 when saying yes to play again
+            DealCondtion = 2;
+            do{
+                DealCard(DealCondtion);
+                DealCondtion = 1;
+                System.out.println("Current Hand:\n" + PlayerDeck);
+                PlayerScore = CalculateScore(PlayerDeck);
+                System.out.println("Current Score: " + PlayerScore);
+                ComputerScore = CalculateScore(ComputerDeck);
+                System.err.println("Deal Again? Enter 1 for Yes and 2 for No");
+                DealAgain = input.nextInt();
+            } while (DealAgain == 1);
+        System.out.println("Play Again? Enter 1 for Yes and 2 for No");
+        PlayAgain = input.nextInt();
+        } while (PlayAgain == 1);
+        
     }
-    // NewDeck: Wipes old deck and creates a new one; includes face, suit, and number
+    // PrintRules: Just prints the rules of the game :P
+    public static void PrintRules(){
+        System.out.println("Welcome to Blackjack!");
+        System.out.println("Rules: ");
+        System.out.println("1. A total score over 21 results in a bust \n2. Closest score to 21 wins\n3. Blackjack is highest hand, consisting of an Ace and any 10-point card");
+        System.out.println("Scoring(Lowest to Highest):");
+        System.out.println("Ace = 1; 2-9 = Pip Value; 10 and Face Cards = 10; Blackjack = Ace and any Face card");
+        System.err.println("Note: Dealer will always hit as long as their total is less than 17");
+    }
+    // NewDeck: Wipes old Deck, PLayerDeck, and ComputerDeck and creates a new ones; includes face, suit, and number
     public static void NewDeck(ArrayList<String> Deck){
         Deck.clear();
+        PlayerDeck.clear();
+        ComputerDeck.clear();
         String Suit = "";
         String Face = "";
         for (int j = 1; j <= 4; j++){
@@ -52,8 +78,9 @@ public class MidtermProject {
                     Deck.add(i + " of " + Suit);
         }
     }
-    // calculateScore: Reads through given deck and returns total score of deck
-    public static int calculateScore(ArrayList<String> GivenDeck){
+    // CalculateScore: Reads through given deck and returns total score of deck
+    // Done by reading the string at given index and adding corresponding value of it to total score using if statments
+    public static int CalculateScore(ArrayList<String> GivenDeck){
         int Score = 0;
         for (int i = 0; i < GivenDeck.size(); i++){
             if (GivenDeck.get(i).contains("Ace"))
@@ -66,10 +93,10 @@ public class MidtermProject {
         }
         return Score;
     }
-    // DealCard: Chooses a random elements from ArrayList Deck and moves one to player and computer deck, repsectively
+    // DealCard: Chooses a random element from ArrayList Deck and adds it to player and computer deck, repsectively
+    // also removes card from deck so isn't deal to both the player and computer
     // Runs twices initally to mimic initial deal, then only runs once until game ends
     // Makes sure the same index isn't chosen so the same card isn't dealt twice
-    // Removes card from deck(Element from array) and adds it to either the Players or Computers deck
     public static int DealCard(int Condition){
         int Index1;
         int Index2;
