@@ -3,12 +3,14 @@ import java.util.Random;
 
 public class MidtermProject {
     public static Random rand = new Random();
+    public static ArrayList<Object> Deck = new ArrayList<>();
+    public static ArrayList<Object> PlayerDeck = new ArrayList<>();
+    public static ArrayList<Object> ComputerDeck = new ArrayList<>();
     public static void main(String[] args) {
-        ArrayList<Object> Deck = new ArrayList<>();
-        ArrayList<Object> PlayerDeck = new ArrayList<>();
-        ArrayList<Object> ComputerDeck = new ArrayList<>();
+        
         NewDeck(Deck);
-        InitialDeal(Deck, PlayerDeck, ComputerDeck);
+        int DealCondition = 2;
+        DealCard(Deck, PlayerDeck, ComputerDeck);
         System.out.println(PlayerDeck);
         System.out.println(ComputerDeck);
     }
@@ -43,12 +45,12 @@ public class MidtermProject {
         }
     }
     // InitialCard: Chooses a random elements from ArrayList Deck and moves them, runs twice to deal two cards for both player and computer. 
-    // Makes sure the same index isn't chosen so the same card isn't dealt
+    // Makes sure the same index isn't chosen so the same card isn't dealt twice
     // Removes card from deck(Element from array) and adds it to either the Players or Computers deck
-    public static void InitialDeal(ArrayList<Object> Deck, ArrayList<Object> PlayerDeck, ArrayList<Object> ComputerDeck){
+    public static int DealCard(int Condition){
         int Index1;
         int Index2;
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < Condition; i++){
             do {
                 Index1 = rand.nextInt(Deck.size() - 1);
                 Index2 = rand.nextInt(Deck.size() - 1);
@@ -58,6 +60,7 @@ public class MidtermProject {
             ComputerDeck.add(Deck.get(Index2));
             Deck.remove(Index2);
         }
+        return 1;
     }   
 }
 
