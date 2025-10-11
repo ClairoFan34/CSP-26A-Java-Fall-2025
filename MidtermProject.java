@@ -1,4 +1,3 @@
-// TODO: Finish calculateScore
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -17,6 +16,8 @@ public class MidtermProject {
             DealCondition = DealCard(DealCondition);
             System.out.println(PlayerDeck);
             System.out.println(ComputerDeck);
+            System.out.println(calculateScore(PlayerDeck));
+            System.out.println(calculateScore(ComputerDeck));
             System.out.println("Deal Again? 1: Yes 2: No");
             DealAgain = input.nextInt();
         } while (DealAgain == 1);
@@ -51,13 +52,19 @@ public class MidtermProject {
                     Deck.add(i + " of " + Suit);
         }
     }
-    public static int calculateScore(ArrayList<Integer> Deck){
-        int ComputerScore = 0;
-        int PlayerScore = 0;
-        for (int i = 0; i < Deck.size() - 1; i++){
-            if (PlayerDeck.get(i).contains("Ace"));
-
+    // calculateScore: Reads through given deck and returns total score of deck
+    public static int calculateScore(ArrayList<String> GivenDeck){
+        int Score = 0;
+        for (int i = 0; i < GivenDeck.size(); i++){
+            if (GivenDeck.get(i).contains("Ace"))
+                Score += 1;
+            for (int j = 2; j <= 9; j++)
+                if (GivenDeck.get(i).contains(String.valueOf(j)))
+                    Score += j;
+            if (GivenDeck.get(i).contains("10") || GivenDeck.get(i).contains("Jack") || GivenDeck.get(i).contains("Queen") || GivenDeck.get(i).contains("King"))
+                Score += 10;
         }
+        return Score;
     }
     // DealCard: Chooses a random elements from ArrayList Deck and moves one to player and computer deck, repsectively
     // Runs twices initally to mimic initial deal, then only runs once until game ends
