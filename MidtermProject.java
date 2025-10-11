@@ -1,19 +1,29 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class MidtermProject {
     public static Random rand = new Random();
+    public static Scanner input = new Scanner(System.in);
+    public static ArrayList<String> Deck = new ArrayList<>();
+    public static ArrayList<String> PlayerDeck = new ArrayList<>();
+    public static ArrayList<String> ComputerDeck = new ArrayList<>();
     public static void main(String[] args) {
-        ArrayList<Object> Deck = new ArrayList<>();
-        ArrayList<Object> PlayerDeck = new ArrayList<>();
-        ArrayList<Object> ComputerDeck = new ArrayList<>();
         NewDeck(Deck);
-        InitialDeal(Deck, PlayerDeck, ComputerDeck);
-        System.out.println(PlayerDeck);
-        System.out.println(ComputerDeck);
+        int DealAgain = 1;
+        int DealCondition = 2;
+        do{
+            DealCondition = DealCard(DealCondition);
+            System.out.println(PlayerDeck);
+            System.out.println(ComputerDeck);
+            System.out.println(calculateScore(PlayerDeck));
+            System.out.println(calculateScore(ComputerDeck));
+            System.out.println("Deal Again? 1: Yes 2: No");
+            DealAgain = input.nextInt();
+        } while (DealAgain == 1);
     }
     // NewDeck: Wipes old deck and creates a new one; includes face, suit, and number
-    public static void NewDeck(ArrayList<Object> Deck){
+    public static void NewDeck(ArrayList<String> Deck){
         Deck.clear();
         String Suit = "";
         String Face = "";
@@ -42,13 +52,28 @@ public class MidtermProject {
                     Deck.add(i + " of " + Suit);
         }
     }
-    // InitialCard: Chooses a random elements from ArrayList Deck and moves them, runs twice to deal two cards for both player and computer. 
-    // Makes sure the same index isn't chosen so the same card isn't dealt
+    // calculateScore: Reads through given deck and returns total score of deck
+    public static int calculateScore(ArrayList<String> GivenDeck){
+        int Score = 0;
+        for (int i = 0; i < GivenDeck.size(); i++){
+            if (GivenDeck.get(i).contains("Ace"))
+                Score += 1;
+            for (int j = 2; j <= 9; j++)
+                if (GivenDeck.get(i).contains(String.valueOf(j)))
+                    Score += j;
+            if (GivenDeck.get(i).contains("10") || GivenDeck.get(i).contains("Jack") || GivenDeck.get(i).contains("Queen") || GivenDeck.get(i).contains("King"))
+                Score += 10;
+        }
+        return Score;
+    }
+    // DealCard: Chooses a random elements from ArrayList Deck and moves one to player and computer deck, repsectively
+    // Runs twices initally to mimic initial deal, then only runs once until game ends
+    // Makes sure the same index isn't chosen so the same card isn't dealt twice
     // Removes card from deck(Element from array) and adds it to either the Players or Computers deck
-    public static void InitialDeal(ArrayList<Object> Deck, ArrayList<Object> PlayerDeck, ArrayList<Object> ComputerDeck){
+    public static int DealCard(int Condition){
         int Index1;
         int Index2;
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < Condition; i++){
             do {
                 Index1 = rand.nextInt(Deck.size() - 1);
                 Index2 = rand.nextInt(Deck.size() - 1);
@@ -58,6 +83,7 @@ public class MidtermProject {
             ComputerDeck.add(Deck.get(Index2));
             Deck.remove(Index2);
         }
+        return 1;
     }   
 }
 
