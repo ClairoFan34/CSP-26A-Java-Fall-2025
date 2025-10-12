@@ -8,12 +8,10 @@ public class MidtermProject {
     public static ArrayList<String> Deck = new ArrayList<>();
     public static ArrayList<String> PlayerDeck = new ArrayList<>();
     public static ArrayList<String> ComputerDeck = new ArrayList<>();
+    public static int PlayerScore = 0;
+    public static int ComputerScore = 0;
     public static void main(String[] args) {
         PrintRules();
-        // Stores Computers point total
-        int ComputerScore = 0;
-        // Stores Players point total
-        int PlayerScore = 0;
         // Initilized DealConiditon for later use
         int DealCondtion = 0;
         String DealAgain = "1";
@@ -25,11 +23,10 @@ public class MidtermProject {
             // var DealCondtion is used for func DealCard, every first go around it's set to 2 so 2 cards are dealt. After that it's set to 1 so only one card is dealt
             // Reset to 2 when saying yes to play again
             DealCondtion = 2;
-            NextMove(DealCondtion, PlayerScore, ComputerScore, DealAgain);
+            NextMove(DealCondtion, DealAgain);
             System.out.println("Play Again? 1. Yes 2. No");
             PlayAgain = input.next().toLowerCase();
         } while (PlayAgain.equals("1") || PlayAgain.equals("yes"));
-        
     }
     // PrintRules: Just prints the rules of the game :P
     public static void PrintRules(){
@@ -91,8 +88,8 @@ public class MidtermProject {
                 Score += 10;
                 Ten = true;
             }
-            // Blackjack can only trigger on initial hand, checked by GivenDeck size only being 2 cards and if an Ace and Ten are present
         }
+        // Blackjack can only trigger on initial hand, checked by GivenDeck size only being 2 cards and if an Ace and Ten are presen
         if (Ace == true && Ten == true && GivenDeck.size() == 2 )
                 return -1;
         return Score;
@@ -101,24 +98,20 @@ public class MidtermProject {
     // also removes card from deck so it isn't dealt to both the player and computer during next hand
     // Runs twices initally to mimic initial deal, then only runs once until round ends
     // Makes sure the same index isn't chosen so the same card isn't dealt twice during current deal
-    public static int DealCard(int Condition){
+    public static int DealCardDealerPla(int Condition){
         int Index;
         for (int i = 0; i < Condition; i++){
             Index = rand.nextInt(Deck.size());
             PlayerDeck.add(Deck.get(Index));
             Deck.remove(Index);
             Index = rand.nextInt(Deck.size());
-            if (CalculateScore(ComputerDeck) < 17){
-                ComputerDeck.add(Deck.get(Index));
-                Deck.remove(Index);
-            }
         }
         return 1;
     }   
     // NextMove: All task and info related to player's next move
     // Ask player if they want to hit again and does so if answered yes
     // Also displays current hand, current score, as well as prevents the Player or Computer hitting if they scored a Blackjack or Busted
-    public static void NextMove(int DealCondtion, int PlayerScore, int ComputerScore, String DealAgain){
+    public static void NextMove(int DealCondtion, String DealAgain){
         do {
             DealCard(DealCondtion);
             DealCondtion = 1;
@@ -162,7 +155,7 @@ public class MidtermProject {
             }
             System.out.println("Deal Again? 1. Yes 2. No");
             DealAgain = input.next().toLowerCase();
-        } while (DealAgain.contains("1") || DealAgain.contains("yes"));
+        } while (DealAgain.equals("1") || DealAgain.equals("yes"));
         if (!DealAgain.contains("1") && !DealAgain.contains("yes") && PlayerScore != -1 && ComputerScore != -1)
         while (ComputerScore < 17) {
             DealCard(1);
@@ -172,8 +165,6 @@ public class MidtermProject {
     }
     //WinLogic: If player or computer does not bust or blackjack, checks for a tie or who's closer to 21
     public static void WinLogic(){
-        int ComputerScore = CalculateScore(ComputerDeck);
-        int PlayerScore = CalculateScore(PlayerDeck);
             if (!(ComputerScore > 21) && !(PlayerScore > 21)){
                 if (21 - ComputerScore < 21 - PlayerScore)
                     System.out.println("Computer wins! Computer Score: " + ComputerScore);
