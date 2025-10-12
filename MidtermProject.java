@@ -102,18 +102,15 @@ public class MidtermProject {
     // Runs twices initally to mimic initial deal, then only runs once until round ends
     // Makes sure the same index isn't chosen so the same card isn't dealt twice during current deal
     public static int DealCard(int Condition){
-        int Index1;
-        int Index2;
+        int Index;
         for (int i = 0; i < Condition; i++){
-            do {
-                Index1 = rand.nextInt(Deck.size() - 1);
-                Index2 = rand.nextInt(Deck.size() - 1);
-            } while (Index1 == Index2);
-            PlayerDeck.add(Deck.get(Index1));
-            Deck.remove(Index1);
+            Index = rand.nextInt(Deck.size());
+            PlayerDeck.add(Deck.get(Index));
+            Deck.remove(Index);
+            Index = rand.nextInt(Deck.size());
             if (CalculateScore(ComputerDeck) < 17 && CalculateScore(ComputerDeck) >= 0) {
-                ComputerDeck.add(Deck.get(Index2));
-                Deck.remove(Index2);
+                ComputerDeck.add(Deck.get(Index));
+                Deck.remove(Index);
             }
         }
         return 1;
@@ -139,6 +136,10 @@ public class MidtermProject {
             else if (ComputerScore > 21){
                 System.out.println("Computer Score: " + ComputerScore);
                 System.out.println("Bust! Computer Loses. Computer Score: " + ComputerScore);
+                break;
+            }
+            else if (PlayerScore > 21 && ComputerScore > 21){
+                System.err.println("Complete Bust! Player and Computer lose!");
                 break;
             }
             else if (PlayerScore == -1) {
@@ -167,12 +168,14 @@ public class MidtermProject {
     }
     //WinLogic: If player or computer does not bust or blackjack, checks for a tie or who's closer to 21
     public static void WinLogic(int ComputerScore, int PlayerScore){
-            if (21 - ComputerScore < 21 - PlayerScore)
-                System.out.println("Computer wins! Computer Score:" + ComputerScore);
-            else if (21 - ComputerScore == 21 - PlayerScore)
-                System.out.println("Tie!");
-            else
-                System.out.println("Player wins!"); 
+            if (!(ComputerScore > 21) && !(PlayerScore > 21)){
+                if (21 - ComputerScore < 21 - PlayerScore)
+                    System.out.println("Computer wins! Computer Score: " + ComputerScore);
+                else if (21 - ComputerScore == 21 - PlayerScore)
+                    System.out.println("Tie!");
+                else
+                    System.out.println("Player wins!"); 
+            }
     }
 }
 
