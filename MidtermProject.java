@@ -13,8 +13,8 @@ public class MidtermProject {
         int ComputerScore;
         int PlayerScore;
         int DealCondtion;
-        int DealAgain = 1;
-        int PlayAgain = 1;
+        String DealAgain;
+        String PlayAgain;
         do{
             System.out.println("\nStart!");
             // New deck created, old decks cleared
@@ -27,14 +27,29 @@ public class MidtermProject {
                 DealCondtion = 1;
                 System.out.println("Current Hand:\n" + PlayerDeck);
                 PlayerScore = CalculateScore(PlayerDeck);
-                System.out.println("Current Score: " + PlayerScore);
                 ComputerScore = CalculateScore(ComputerDeck);
-                System.err.println("Deal Again? Enter 1 for Yes and 2 for No");
-                DealAgain = input.nextInt();
-            } while (DealAgain == 1);
-        System.out.println("Play Again? Enter 1 for Yes and 2 for No");
-        PlayAgain = input.nextInt();
-        } while (PlayAgain == 1);
+                if (PlayerScore == 0){
+                    if (ComputerScore == 0) {
+                        System.out.println("Computer also scored Blackjack");
+                        break;
+                        }
+                    else { 
+                        System.out.println("BLACKJACK!!!");
+                        break;
+                    }
+                }
+                else if (ComputerScore == 0){
+                    System.out.println("Computer scored Blackjack");
+                    break;
+                }
+                else    
+                    System.out.println("Current Score: " + PlayerScore);
+                System.err.println("Deal Again? 1. Yes 2. No");
+                DealAgain = input.next().toLowerCase();
+            } while (DealAgain.contains("1") || DealAgain.contains("yes"));
+        System.out.println("Play Again? 1. Yes 2. No");
+        PlayAgain = input.next().toLowerCase();
+        } while (PlayAgain.contains("1") || PlayAgain.contains("yes"));
         
     }
     // PrintRules: Just prints the rules of the game :P
@@ -80,16 +95,26 @@ public class MidtermProject {
     }
     // CalculateScore: Reads through given deck and returns total score of deck
     // Done by reading the string at given index and adding corresponding value of it to total score using if statments
+    // Value 0 means Blackjack
     public static int CalculateScore(ArrayList<String> GivenDeck){
         int Score = 0;
+        boolean Ace = false;
+        boolean Ten = false;
         for (int i = 0; i < GivenDeck.size(); i++){
-            if (GivenDeck.get(i).contains("Ace"))
+            if (GivenDeck.get(i).contains("Ace")){
                 Score += 1;
+                Ace = true;
+            }
             for (int j = 2; j <= 9; j++)
                 if (GivenDeck.get(i).contains(String.valueOf(j)))
                     Score += j;
-            if (GivenDeck.get(i).contains("10") || GivenDeck.get(i).contains("Jack") || GivenDeck.get(i).contains("Queen") || GivenDeck.get(i).contains("King"))
+            if (GivenDeck.get(i).contains("10") || GivenDeck.get(i).contains("Jack") || GivenDeck.get(i).contains("Queen") || GivenDeck.get(i).contains("King")){
                 Score += 10;
+                Ten = true;
+            }
+            // Blackjack can only trigger on initial hand, checked by GivenDeck size only being 2 cards and if an Ace and Ten are present
+            if (Ace == true && Ten == true && GivenDeck.size() == 2 )
+                return 0;
         }
         return Score;
     }
@@ -112,5 +137,6 @@ public class MidtermProject {
         }
         return 1;
     }   
+    
 }
 
