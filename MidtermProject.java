@@ -81,12 +81,15 @@ public class MidtermProject {
                 Score += 1;
                 Ace = true;
             }
-            for (int j = 2; j <= 9; j++)
-                if (GivenDeck.get(i).contains(String.valueOf(j)))
-                    Score += j;
-            if (GivenDeck.get(i).contains("10") || GivenDeck.get(i).contains("Jack") || GivenDeck.get(i).contains("Queen") || GivenDeck.get(i).contains("King")){
+            else if (GivenDeck.get(i).contains("10") || GivenDeck.get(i).contains("Jack") || GivenDeck.get(i).contains("Queen") || GivenDeck.get(i).contains("King")){
                 Score += 10;
                 Ten = true;
+            }
+            else {
+                for (int j = 2; j <= 9; j++) {
+                    if (GivenDeck.get(i).contains(String.valueOf(j)))
+                    Score += j;
+                }
             }
         }
         // Blackjack can only trigger on initial hand, checked by GivenDeck size only being 2 cards and if an Ace and Ten are presen
@@ -94,27 +97,35 @@ public class MidtermProject {
                 return -1;
         return Score;
     }
-    // DealCard: Chooses a random element from ArrayList Deck and adds it to player and computer deck, repsectively
+    // DealCardX: Chooses a random element from ArrayList Deck and adds it to player and computer deck, repsectively
     // also removes card from deck so it isn't dealt to both the player and computer during next hand
     // Runs twices initally to mimic initial deal, then only runs once until round ends
-    // Makes sure the same index isn't chosen so the same card isn't dealt twice during current deal
-    public static int DealCardDealerPla(int Condition){
+    public static int DealCardPlayer(int Condition){
         int Index;
         for (int i = 0; i < Condition; i++){
             Index = rand.nextInt(Deck.size());
             PlayerDeck.add(Deck.get(Index));
             Deck.remove(Index);
+        }
+        return 1;
+    }
+    public static int DealCardComputer(int Condition){
+        int Index;
+        for (int i = 0; i < Condition; i++){
             Index = rand.nextInt(Deck.size());
+            ComputerDeck.add(Deck.get(Index));
+            Deck.remove(Index);
         }
         return 1;
     }   
     // NextMove: All task and info related to player's next move
     // Ask player if they want to hit again and does so if answered yes
     // Also displays current hand, current score, as well as prevents the Player or Computer hitting if they scored a Blackjack or Busted
-    public static void NextMove(int DealCondtion, String DealAgain){
+    public static void NextMove(int DealCondition, String DealAgain){
         do {
-            DealCard(DealCondtion);
-            DealCondtion = 1;
+            DealCardPlayer(DealCondition);
+            DealCardComputer(DealCondition);
+            DealCondition = 1;
             System.out.println("Current Hand:\n" + PlayerDeck);
             System.out.println("Computer Hand:\n" + ComputerDeck);
             PlayerScore = CalculateScore(PlayerDeck);
@@ -158,7 +169,7 @@ public class MidtermProject {
         } while (DealAgain.equals("1") || DealAgain.equals("yes"));
         if (!DealAgain.contains("1") && !DealAgain.contains("yes") && PlayerScore != -1 && ComputerScore != -1)
         while (ComputerScore < 17) {
-            DealCard(1);
+            DealCardComputer(1);
             ComputerScore = CalculateScore(ComputerDeck);
         }
             WinLogic();
