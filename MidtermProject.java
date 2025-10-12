@@ -10,10 +10,13 @@ public class MidtermProject {
     public static ArrayList<String> ComputerDeck = new ArrayList<>();
     public static void main(String[] args) {
         PrintRules();
-        int ComputerScore;
-        int PlayerScore;
-        int DealCondtion;
-        String DealAgain;
+        // Stores Computers point total
+        int ComputerScore = 0;
+        // Stores Players point total
+        int PlayerScore = 0;
+        // Initilized DealConiditon for later use
+        int DealCondtion = 0;
+        String DealAgain = "1";
         String PlayAgain;
         do{
             System.out.println("\nStart!");
@@ -22,33 +25,9 @@ public class MidtermProject {
             // var DealCondtion is used for func DealCard, every first go around it's set to 2 so 2 cards are dealt. After that it's set to 1 so only one card is dealt
             // Reset to 2 when saying yes to play again
             DealCondtion = 2;
-            do{
-                DealCard(DealCondtion);
-                DealCondtion = 1;
-                System.out.println("Current Hand:\n" + PlayerDeck);
-                PlayerScore = CalculateScore(PlayerDeck);
-                ComputerScore = CalculateScore(ComputerDeck);
-                if (PlayerScore == 0){
-                    if (ComputerScore == 0) {
-                        System.out.println("Computer also scored Blackjack");
-                        break;
-                        }
-                    else { 
-                        System.out.println("BLACKJACK!!!");
-                        break;
-                    }
-                }
-                else if (ComputerScore == 0){
-                    System.out.println("Computer scored Blackjack");
-                    break;
-                }
-                else    
-                    System.out.println("Current Score: " + PlayerScore);
-                System.err.println("Deal Again? 1. Yes 2. No");
-                DealAgain = input.next().toLowerCase();
-            } while (DealAgain.contains("1") || DealAgain.contains("yes"));
-        System.out.println("Play Again? 1. Yes 2. No");
-        PlayAgain = input.next().toLowerCase();
+            NextMove(DealCondtion, PlayerScore, ComputerScore, DealAgain);
+            System.out.println("Play Again? 1. Yes 2. No");
+            PlayAgain = input.next().toLowerCase();
         } while (PlayAgain.contains("1") || PlayAgain.contains("yes"));
         
     }
@@ -59,7 +38,7 @@ public class MidtermProject {
         System.out.println("1. A total score over 21 results in a bust \n2. Closest score to 21 wins\n3. Blackjack is highest hand, consisting of an Ace and any 10-point card");
         System.out.println("Scoring(Lowest to Highest):");
         System.out.println("Ace = 1; 2-9 = Pip Value; 10 and Face Cards = 10; Blackjack = Ace and any Face card");
-        System.err.println("Note: Dealer will always hit as long as their total is less than 17");
+        System.out.println("Note: Dealer will always hit as long as their total is less than 17");
     }
     // NewDeck: Wipes old Deck, PLayerDeck, and ComputerDeck and creates a new ones; includes face, suit, and number
     public static void NewDeck(ArrayList<String> Deck){
@@ -114,14 +93,14 @@ public class MidtermProject {
             }
             // Blackjack can only trigger on initial hand, checked by GivenDeck size only being 2 cards and if an Ace and Ten are present
             if (Ace == true && Ten == true && GivenDeck.size() == 2 )
-                return 0;
+                return -1;
         }
         return Score;
     }
     // DealCard: Chooses a random element from ArrayList Deck and adds it to player and computer deck, repsectively
-    // also removes card from deck so isn't deal to both the player and computer
-    // Runs twices initally to mimic initial deal, then only runs once until game ends
-    // Makes sure the same index isn't chosen so the same card isn't dealt twice
+    // also removes card from deck so it isn't dealt to both the player and computer during next hand
+    // Runs twices initally to mimic initial deal, then only runs once until round ends
+    // Makes sure the same index isn't chosen so the same card isn't dealt twice during current deal
     public static int DealCard(int Condition){
         int Index1;
         int Index2;
@@ -132,11 +111,68 @@ public class MidtermProject {
             } while (Index1 == Index2);
             PlayerDeck.add(Deck.get(Index1));
             Deck.remove(Index1);
-            ComputerDeck.add(Deck.get(Index2));
-            Deck.remove(Index2);
+            if (CalculateScore(ComputerDeck) < 17 && CalculateScore(ComputerDeck) >= 0) {
+                ComputerDeck.add(Deck.get(Index2));
+                Deck.remove(Index2);
+            }
         }
         return 1;
     }   
-    
+    // NextMove: All task and info related to player's next move
+    // Ask player if they want to hit again and does so if answered yes
+    // Also displays current hand, current score, as well as prevents the Player or Computer hitting if they scored a Blackjack or Busted
+    public static void NextMove(int DealCondtion, int PlayerScore, int ComputerScore, String DealAgain){
+        do {
+            DealCard(DealCondtion);
+            DealCondtion = 1;
+            System.out.println("Current Hand:\n" + PlayerDeck);
+            System.out.println("Computer Hand:\n" + ComputerDeck);
+            PlayerScore = CalculateScore(PlayerDeck);
+            ComputerScore = CalculateScore(ComputerDeck);
+            System.out.println("Computer Score: " + ComputerScore);
+            // All Logic for detecting Blackjack and Bust in either ComputerScore or PlayerScore
+            if (PlayerScore > 21){
+                System.out.println("Current Score: " + PlayerScore);
+                System.out.println("Bust! Player Loses");
+                break;
+            }
+            else if (ComputerScore > 21){
+                System.out.println("Computer Score: " + ComputerScore);
+                System.out.println("Bust! Computer Loses. Computer Score: " + ComputerScore);
+                break;
+            }
+            else if (PlayerScore == -1) {
+                if (ComputerScore == -1) {
+                    System.out.println("Computer also scored Blackjack, Tie!");
+                    break;
+                } 
+                else {
+                    System.out.println("BLACKJACK!!! Player Wins!");
+                    break;
+                }
+            } 
+            else if (ComputerScore == -1) {
+                System.out.println("Computer scored Blackjack");
+                break;
+            } 
+            else {
+                if (PlayerScore >= 0)
+                    System.out.println("Current Score: " + PlayerScore);
+            }
+            System.out.println("Deal Again? 1. Yes 2. No");
+            DealAgain = input.next().toLowerCase();
+        } while (DealAgain.contains("1") || DealAgain.contains("yes"));
+        if (!DealAgain.contains("1") || !DealAgain.contains("yes") && PlayerScore != -1 || ComputerScore == -1)
+            WinLogic(ComputerScore, PlayerScore);
+    }
+    //WinLogic: If player or computer does not bust or blackjack, checks for a tie or who's closer to 21
+    public static void WinLogic(int ComputerScore, int PlayerScore){
+            if (21 - ComputerScore < 21 - PlayerScore)
+                System.out.println("Computer wins! Computer Score:" + ComputerScore);
+            else if (21 - ComputerScore == 21 - PlayerScore)
+                System.out.println("Tie!");
+            else
+                System.out.println("Player wins!"); 
+    }
 }
 
