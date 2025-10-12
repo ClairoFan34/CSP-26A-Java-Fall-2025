@@ -28,7 +28,7 @@ public class MidtermProject {
             NextMove(DealCondtion, PlayerScore, ComputerScore, DealAgain);
             System.out.println("Play Again? 1. Yes 2. No");
             PlayAgain = input.next().toLowerCase();
-        } while (PlayAgain.contains("1") || PlayAgain.contains("yes"));
+        } while (PlayAgain.equals("1") || PlayAgain.equals("yes"));
         
     }
     // PrintRules: Just prints the rules of the game :P
@@ -92,9 +92,9 @@ public class MidtermProject {
                 Ten = true;
             }
             // Blackjack can only trigger on initial hand, checked by GivenDeck size only being 2 cards and if an Ace and Ten are present
-            if (Ace == true && Ten == true && GivenDeck.size() == 2 )
-                return -1;
         }
+        if (Ace == true && Ten == true && GivenDeck.size() == 2 )
+                return -1;
         return Score;
     }
     // DealCard: Chooses a random element from ArrayList Deck and adds it to player and computer deck, repsectively
@@ -108,7 +108,7 @@ public class MidtermProject {
             PlayerDeck.add(Deck.get(Index));
             Deck.remove(Index);
             Index = rand.nextInt(Deck.size());
-            if (CalculateScore(ComputerDeck) < 17 && CalculateScore(ComputerDeck) >= 0) {
+            if (CalculateScore(ComputerDeck) < 17){
                 ComputerDeck.add(Deck.get(Index));
                 Deck.remove(Index);
             }
@@ -128,7 +128,11 @@ public class MidtermProject {
             ComputerScore = CalculateScore(ComputerDeck);
             System.out.println("Computer Score: " + ComputerScore);
             // All Logic for detecting Blackjack and Bust in either ComputerScore or PlayerScore
-            if (PlayerScore > 21){
+            if (PlayerScore > 21 && ComputerScore > 21){
+                System.err.println("Complete Bust! Player and Computer lose!");
+                break;
+            }
+            else if (PlayerScore > 21){
                 System.out.println("Current Score: " + PlayerScore);
                 System.out.println("Bust! Player Loses");
                 break;
@@ -136,10 +140,6 @@ public class MidtermProject {
             else if (ComputerScore > 21){
                 System.out.println("Computer Score: " + ComputerScore);
                 System.out.println("Bust! Computer Loses. Computer Score: " + ComputerScore);
-                break;
-            }
-            else if (PlayerScore > 21 && ComputerScore > 21){
-                System.err.println("Complete Bust! Player and Computer lose!");
                 break;
             }
             else if (PlayerScore == -1) {
@@ -163,11 +163,17 @@ public class MidtermProject {
             System.out.println("Deal Again? 1. Yes 2. No");
             DealAgain = input.next().toLowerCase();
         } while (DealAgain.contains("1") || DealAgain.contains("yes"));
-        if (!DealAgain.contains("1") || !DealAgain.contains("yes") && PlayerScore != -1 || ComputerScore == -1)
-            WinLogic(ComputerScore, PlayerScore);
+        if (!DealAgain.contains("1") && !DealAgain.contains("yes") && PlayerScore != -1 && ComputerScore != -1)
+        while (ComputerScore < 17) {
+            DealCard(1);
+            ComputerScore = CalculateScore(ComputerDeck);
+        }
+            WinLogic();
     }
     //WinLogic: If player or computer does not bust or blackjack, checks for a tie or who's closer to 21
-    public static void WinLogic(int ComputerScore, int PlayerScore){
+    public static void WinLogic(){
+        int ComputerScore = CalculateScore(ComputerDeck);
+        int PlayerScore = CalculateScore(PlayerDeck);
             if (!(ComputerScore > 21) && !(PlayerScore > 21)){
                 if (21 - ComputerScore < 21 - PlayerScore)
                     System.out.println("Computer wins! Computer Score: " + ComputerScore);
