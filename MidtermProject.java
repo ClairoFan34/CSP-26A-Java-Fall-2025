@@ -103,9 +103,9 @@ public class MidtermProject {
                 return -1;
         return Score;
     }
-    // DealCardX: Chooses a random element from ArrayList Deck and adds it to player and computer deck, repsectively
+    // DealCardX: Chooses a random element from ArrayList Deck and adds it to player or computer deck, repsectively
     // also removes card from deck so it isn't dealt to both the player and computer during next hand
-    // Runs twices initally to mimic initial deal, then only runs once until round ends
+    // Condition used to determine amonunt of cards dealt. Ran twice initally to mimic initial deal, then only runs once until round ends
     public static int DealCardPlayer(int Condition){
         int Index;
         for (int i = 0; i < Condition; i++){
@@ -124,7 +124,8 @@ public class MidtermProject {
         }
         return 1;
     }   
-    // NextMove: Ask for players next move, hit or stand
+    // NextMove: All info relating to players next move 
+    // Asks for players next move, hit or stand
     // Also displays current hand, current score, as well as prevents the Player from hiiting if they scored a Blackjack or Busted
     // returns true if player is still in the game and false if theyre not
     public static boolean NextMove(){
@@ -150,7 +151,7 @@ public class MidtermProject {
         return true;
     }
     // ComputerMove: Functions the same as NextMove, but for computer and doesn't return
-    // Also prevents the computer from hitting if their score is over 17
+    // Forces the computer to hit if their score isnt over 17
     public static void ComputerMove(){
         ComputerScore = CalculateScore(ComputerDeck);
         while (ComputerScore < 17){
