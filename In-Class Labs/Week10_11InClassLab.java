@@ -8,10 +8,12 @@ public class Week10_11InClassLab {
         checkExam(getStuAnswers());
     }
 
-    // checkExam is used to compare the given list of answers determined in getStuAnswers
+    // checkExam: Compares the given list of answers determined in getStuAnswers
     // Correct answers are hard-coded
     // Amount of answers incorrect are tracked by decrementing answers correct when the two arrays dont match, starting at 20
     // Index is also added to an arraylist, to track what exact question were wrong
+    // After arrays are compared, total score is displayed along with what questions were wrong
+    // If score greater than or equal to 15, pass message is displayed, otherwise fail message is
     public static void checkExam(char[] studentAnswers) {
         ArrayList<Integer> answersWrong = new ArrayList<>();
         int answersCorrect = 20;
@@ -19,7 +21,7 @@ public class Week10_11InClassLab {
         char[] correctAnswers = {'b','d','a','a','c','a','b','a','c','d','b','c','d','a','d','c','c','b','d','a'};
         for (i = 0; i < correctAnswers.length; i++){
             if (correctAnswers[i] != studentAnswers[i]){
-                answersWrong.add(i);
+                answersWrong.add(i + 1);
                 answersCorrect--;
             }
         }
@@ -31,6 +33,9 @@ public class Week10_11InClassLab {
             System.out.println("You failed!");
     }
 
+    // getStuAnswers: Displays question message and tracks what the user inputs for each question
+    // Any letter others than A through D is invalid, reprompting the user to enter a letter
+    // Returns the array with student answers at the end of the loop
     public static char[] getStuAnswers() {
         char [] studentAnswers = new char[20];
         System.out.println("Exam Start!");
