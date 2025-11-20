@@ -6,7 +6,7 @@ public class CellPhone {
     private String model;
     private int storage;
     private boolean isOn;
-    private double batteryLevel;
+    private int batteryLevel;
     private ArrayList<String> contacts = new ArrayList<>();
 
     // Constructor 1: Default data constructor, initializes all variables when creating a new object
@@ -26,5 +26,32 @@ public class CellPhone {
         isOn = false;
         this.batteryLevel = 100;
         contacts = new ArrayList<>();
+    }
+    
+    // All getters and setters paired
+    // Brand
+    public String getBrand() {
+        return brand;
+    }
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+    // Model
+    public String getModel() {
+        return model; 
+    }
+    public void setModel(String model) {
+        this.model = model;
+    }
+    // Storage
+    public int getStorage() {
+        return storage;
+    }
+    public void setStorage (int Storage) {
+        this.storage = storage;
+    }
+    //Battery
+    public int getBattery() {
+        return batteryLevel;
     }
 }
