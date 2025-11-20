@@ -47,12 +47,16 @@ public class CellPhone {
     public int getStorage() {
         return storage;
     }
-    public void setStorage (int Storage) {
+    public void setStorage (int storage) {
         this.storage = storage;
-    }
+    }    
     //Battery
     public double getBattery() {
         return batteryLevel;
+    }
+    // Power
+    public boolean isOn() {
+        return isOn;
     }
     // Contacts
     public ArrayList<String> getContacts(){
